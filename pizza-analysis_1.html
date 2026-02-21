@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pizza Calculator Analysis</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FAFAF7;
+    --surface: #FFFFFF;
+    --border: #E8E4DC;
+    --text: #1A1814;
+    --muted: #7A7570;
+    --red: #C0392B;
+    --amber: #D4873A;
+    --green: #3A7D52;
+    --blue: #2C5F8A;
+    --dough: #F5E6CC;
+    --dough-dark: #E8C98A;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    font-family: 'DM Mono', monospace;
+    color: var(--text);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  header {
+    background: var(--text);
+    color: var(--bg);
+    padding: 32px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.2rem;
+    line-height: 1;
+  }
+
+  header h1 em {
+    font-style: italic;
+    color: var(--dough-dark);
+  }
+
+  header p {
+    color: rgba(250,250,247,0.5);
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 40px; }
+
+  /* TABS */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 32px;
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 0;
+  }
+
+  .tab {
+    padding: 10px 20px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.2s;
+  }
+
+  .tab.active {
+    color: var(--text);
+    border-bottom-color: var(--text);
+  }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 24px;
+  }
+
+  .card-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .card-value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .card-sub {
+    font-size: 0.65rem;
+    color: var(--muted);
+  }
+
+  /* DOUGH CALCULATOR */
+  .calc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-bottom: 32px;
+  }
+
+  @media (max-width: 700px) { .calc-grid { grid-template-columns: 1fr; } }
+
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 28px;
+  }
+
+  .panel h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .input-group {
+    margin-bottom: 16px;
+  }
+
+  .input-group label {
+    display: block;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .input-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  input[type="range"] {
+    flex: 1;
+    accent-color: var(--text);
+  }
+
+  input[type="number"] {
+    width: 80px;
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--text);
+  }
+
+  .result-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .result-row:last-child { border-bottom: none; }
+
+  .result-name { color: var(--muted); }
+
+  .result-value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+  }
+
+  .result-unit {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    margin-left: 4px;
+  }
+
+  /* BATCH LOG TABLE */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--surface);
+  }
+
+  th {
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 2px solid var(--border);
+    background: var(--dough);
+  }
+
+  td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.8rem;
+  }
+
+  tr:hover td { background: var(--dough); }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+  }
+
+  .badge-green { background: #E8F5EE; color: var(--green); }
+  .badge-amber { background: #FEF3E2; color: var(--amber); }
+  .badge-red { background: #FDEDEB; color: var(--red); }
+
+  /* INGREDIENT BREAKDOWN */
+  .ingredient-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .ingredient-bar-name {
+    width: 120px;
+    color: var(--muted);
+    font-size: 0.75rem;
+    flex-shrink: 0;
+  }
+
+  .bar-track {
+    flex: 1;
+    height: 6px;
+    background: var(--border);
+    border-radius: 0;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 0;
+    transition: width 0.5s ease;
+  }
+
+  .ingredient-bar-amount {
+    width: 80px;
+    text-align: right;
+    font-size: 0.75rem;
+    color: var(--text);
+  }
+
+  /* YEAST TABLE */
+  .yeast-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 4px;
+    margin-top: 16px;
+  }
+
+  .yeast-cell {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 12px 8px;
+    text-align: center;
+    transition: background 0.2s;
+  }
+
+  .yeast-cell.highlight {
+    background: var(--text);
+    color: var(--bg);
+    border-color: var(--text);
+  }
+
+  .yeast-temp { font-size: 0.65rem; color: var(--muted); }
+  .yeast-val { font-family: 'DM Serif Display', serif; font-size: 1.1rem; }
+
+  .insight-box {
+    background: var(--dough);
+    border-left: 3px solid var(--dough-dark);
+    padding: 16px 20px;
+    margin-top: 24px;
+    font-size: 0.75rem;
+    line-height: 1.8;
+    color: var(--text);
+  }
+
+  .insight-box strong { font-weight: 500; }
+
+  select {
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text);
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>🍕 Pizza <em>Calculator</em></h1>
+    <p style="margin-top:8px;">Ingredient & Dough Analysis — Your Data</p>
+  </div>
+  <div style="text-align:right">
+    <p>7 batches logged</p>
+    <p>Temp range: 20–25°C</p>
+  </div>
+</header>
+
+<div style="text-align:center; padding:12px; background:#1a1a2e;">
+  <button onclick="downloadSelf()" style="background:#6aab6a; color:#fff; border:none; padding:10px 24px; border-radius:6px; font-size:0.9rem; cursor:pointer; font-family:inherit;">⬇️ Save this file to your device</button>
+</div>
+
+<script>
+function downloadSelf() {
+  const html = document.documentElement.outerHTML;
+  const blob = new Blob([html], {type: 'text/html'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'la-foresta-pizza-calculator.html';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+</script>
+
+<div class="container">
+
+  <!-- SUMMARY CARDS -->
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-label">Base Recipe</div>
+      <div class="card-value">18</div>
+      <div class="card-sub">pizzas (default batch)</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Hydration</div>
+      <div class="card-value">61%</div>
+      <div class="card-sub">Neapolitan classic range</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Ball Weight</div>
+      <div class="card-value">265g</div>
+      <div class="card-sub">from 167g flour per ball</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Flour Split</div>
+      <div class="card-value">15/85</div>
+      <div class="card-sub">Type 1 / Type 00 ratio</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Salt Rate</div>
+      <div class="card-value">20g</div>
+      <div class="card-sub">per kg flour</div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('calculator')">🔢 Dough Calculator</button>
+    <button class="tab" onclick="showTab('pizzas')">🍕 Pizza Toppings</button>
+    <button class="tab" onclick="showTab('batches')">📋 Batch Log</button>
+    <button class="tab" onclick="showTab('ingredients')">🧂 Ingredients</button>
+    <button class="tab" onclick="showTab('yeast')">🌡️ Yeast Guide</button>
+  </div>
+
+  <!-- TAB: CALCULATOR -->
+  <div id="tab-calculator" class="tab-panel active">
+    <div class="calc-grid">
+      <div class="panel">
+        <h3>Adjust Your Batch</h3>
+        <div class="input-group">
+          <label>Number of Pizzas</label>
+          <div class="input-row">
+            <input type="range" id="pizzaCount" min="1" max="50" value="18" oninput="updateCalc()">
+            <input type="number" id="pizzaCountNum" value="18" min="1" max="100" oninput="syncSlider()">
+          </div>
+        </div>
+        <div class="input-group">
+          <label>Hydration %</label>
+          <div class="input-row">
+            <input type="range" id="hydration" min="55" max="70" value="61" oninput="updateCalc()">
+            <input type="number" id="hydrationNum" value="61" min="55" max="70" oninput="syncHydration()">
+          </div>
+        </div>
+        <div class="input-group">
+          <label>Type 1 / Type 00 Split (% Type 1)</label>
+          <div class="input-row">
+            <input type="range" id="t1ratio" min="0" max="50" value="15" oninput="updateCalc()">
+            <input type="number" id="t1ratioNum" value="15" min="0" max="50" readonly style="background:#f0f0f0">
+          </div>
+        </div>
+        <div class="input-group">
+          <label>Room Temperature (°C)</label>
+          <div class="input-row">
+            <input type="range" id="calcTemp" min="17" max="28" value="21" oninput="updateCalc()">
+            <input type="number" id="calcTempNum" value="21" min="17" max="28" readonly style="background:#f0f0f0">
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Calculated Quantities</h3>
+        <div class="result-row">
+          <span class="result-name">Type 1 Flour</span>
+          <span><span class="result-value" id="r-t1">450</span><span class="result-unit">g</span></span>
+        </div>
+        <div class="result-row">
+          <span class="result-name">Type 00 Flour</span>
+          <span><span class="result-value" id="r-t00">2555</span><span class="result-unit">g</span></span>
+        </div>
+        <div class="result-row">
+          <span class="result-name">Total Flour</span>
+          <span><span class="result-value" id="r-flour">3006</span><span class="result-unit">g</span></span>
+        </div>
+        <div class="result-row">
+          <span class="result-name">Water</span>
+          <span><span class="result-value" id="r-water">1833</span><span class="result-unit">g</span></span>
+        </div>
+        <div class="result-row">
+          <span class="result-name">Salt</span>
+          <span><span class="result-value" id="r-salt">60</span><span class="result-unit">g</span></span>
+        </div>
+        <div class="result-row">
+          <span class="result-name">Yeast <span id="r-yeast-temp" style="font-size:0.65rem; color:var(--muted); font-weight:400;">@ 21°C</span></span>
+          <span><span class="result-value" id="r-yeast">0.6</span><span class="result-unit">g</span></span>
+        </div>
+        <div class="result-row" style="background:var(--dough); margin: 0 -28px; padding: 12px 28px; margin-top:8px;">
+          <span class="result-name" style="font-weight:600">Total Dough</span>
+          <span><span class="result-value" id="r-total">4901</span><span class="result-unit">g</span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Total Topping Quantities (for <span id="topping-count">18</span> pizzas)</h3>
+      <p style="color:var(--muted); font-size:0.75rem; margin-bottom:16px;">Combined across all pizza varieties — updates with pizza counts above.</p>
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap:12px; margin-top:8px;">
+        <div class="result-row" style="flex-direction:column; align-items:flex-start; border:1px solid var(--border); padding:14px;">
+          <div class="result-name">San Marzano Tomato</div>
+          <div><span class="result-value" id="t-tom">1800</span><span class="result-unit">g</span></div>
+        </div>
+        <div class="result-row" style="flex-direction:column; align-items:flex-start; border:1px solid var(--border); padding:14px;">
+          <div class="result-name">Mozzarella (total)</div>
+          <div><span class="result-value" id="t-mozz">1400</span><span class="result-unit">g</span></div>
+        </div>
+        <div class="result-row" style="flex-direction:column; align-items:flex-start; border:1px solid var(--border); padding:14px;">
+          <div class="result-name">Semolina</div>
+          <div><span class="result-value" id="t-sem">144</span><span class="result-unit">g</span></div>
+        </div>
+        <div class="result-row" style="flex-direction:column; align-items:flex-start; border:1px solid var(--border); padding:14px;">
+          <div class="result-name">Fresh Basil</div>
+          <div><span class="result-value" id="t-basil">72</span><span class="result-unit">leaves</span></div>
+        </div>
+        <div class="result-row" style="flex-direction:column; align-items:flex-start; border:1px solid var(--border); padding:14px;">
+          <div class="result-name">Olive Oil</div>
+          <div><span class="result-value" id="t-oil">40</span><span class="result-unit">ml</span></div>
+        </div>
+        <div class="result-row" style="flex-direction:column; align-items:flex-start; border:1px solid var(--border); padding:14px;">
+          <div class="result-name">Roasted Garlic</div>
+          <div><span class="result-value" id="t-garlic">4</span><span class="result-unit">cloves</span></div>
+        </div>
+        <div class="result-row" style="flex-direction:column; align-items:flex-start; border:1px solid var(--border); padding:14px;">
+          <div class="result-name">Pepperoni</div>
+          <div><span class="result-value" id="t-pep">200</span><span class="result-unit">g</span></div>
+        </div>
+        <div class="result-row" style="flex-direction:column; align-items:flex-start; border:1px solid var(--border); padding:14px;">
+          <div class="result-name">Hot Honey</div>
+          <div><span class="result-value" id="t-honey">7</span><span class="result-unit">drizzles</span></div>
+        </div>
+        <div class="result-row" style="flex-direction:column; align-items:flex-start; border:1px solid var(--border); padding:14px;">
+          <div class="result-name">Tandoori Chicken</div>
+          <div><span class="result-value" id="t-chicken">600</span><span class="result-unit">g</span></div>
+        </div>
+        <div class="result-row" style="flex-direction:column; align-items:flex-start; border:1px solid var(--border); padding:14px;">
+          <div class="result-name">Red Onion</div>
+          <div><span class="result-value" id="t-onion">3</span><span class="result-unit">medium</span></div>
+        </div>
+        <div class="result-row" style="flex-direction:column; align-items:flex-start; border:1px solid var(--border); padding:14px;">
+          <div class="result-name">Fresh Coriander</div>
+          <div><span class="result-value" id="t-cor">1</span><span class="result-unit">bunch</span></div>
+        </div>
+        <div class="result-row" style="flex-direction:column; align-items:flex-start; border:1px solid var(--border); padding:14px;">
+          <div class="result-name">Mango Chutney</div>
+          <div><span class="result-value" id="t-mango">4</span><span class="result-unit">tbsp</span></div>
+        </div>
+        <div class="result-row" style="flex-direction:column; align-items:flex-start; border:1px solid var(--border); padding:14px;">
+          <div class="result-name">Nduja</div>
+          <div><span class="result-value" id="t-nduja">150</span><span class="result-unit">g</span></div>
+        </div>
+        <div class="result-row" style="flex-direction:column; align-items:flex-start; border:1px solid var(--border); padding:14px;">
+          <div class="result-name">Roasted Mixed Peppers</div>
+          <div><span class="result-value" id="t-peppers">3</span><span class="result-unit">peppers</span></div>
+        </div>
+        <div class="result-row" style="flex-direction:column; align-items:flex-start; border:1px solid var(--border); padding:14px;">
+          <div class="result-name">Olives (green, pitted)</div>
+          <div><span class="result-value" id="t-olives">75</span><span class="result-unit">g</span></div>
+        </div>
+        <div class="result-row" style="flex-direction:column; align-items:flex-start; border:1px solid var(--border); padding:14px;">
+          <div class="result-name">Green Pesto</div>
+          <div><span class="result-value" id="t-pesto">3</span><span class="result-unit">tbsp</span></div>
+        </div>
+        <div class="result-row" style="flex-direction:column; align-items:flex-start; border:1px solid var(--border); padding:14px;">
+          <div class="result-name">Pecorino</div>
+          <div><span class="result-value" id="t-pec">56</span><span class="result-unit">g</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="insight-box" style="margin-top:24px">
+      💡 <strong>Insight:</strong> Your base recipe is dialled in as classic Neapolitan — 61% hydration, 20g salt/kg flour, and a 85/15 Type 00 / Type 1 split. The Type 1 adds a slight wholegrain depth without compromising structure. Yeast is temperature-adjusted (see Yeast Guide tab), which shows real craft awareness.
+    </div>
+
+    <div class="panel" style="margin-top:24px;">
+      <h3>Pizzas per Variety</h3>
+      <p style="color:var(--muted); font-size:0.75rem; margin-bottom:20px;">Adjust how many of each pizza you're making. Total updates automatically.</p>
+      <div style="display:grid; grid-template-columns:1fr; gap:12px; max-width:520px;">
+        <div class="input-group">
+          <label>🌊 The Ancient Marinara</label>
+          <div class="input-row">
+            <input type="range" id="p-marinara" min="0" max="20" value="4" oninput="updatePizzas()">
+            <input type="number" id="p-marinara-num" value="4" min="0" max="20" oninput="syncPizza('marinara')">
+          </div>
+        </div>
+        <div class="input-group">
+          <label>🐴 The Pepperoni Pony</label>
+          <div class="input-row">
+            <input type="range" id="p-pepperoni" min="0" max="20" value="4" oninput="updatePizzas()">
+            <input type="number" id="p-pepperoni-num" value="4" min="0" max="20" oninput="syncPizza('pepperoni')">
+          </div>
+        </div>
+        <div class="input-group">
+          <label>🐴 The Tikka Trotter</label>
+          <div class="input-row">
+            <input type="range" id="p-tikka" min="0" max="20" value="4" oninput="updatePizzas()">
+            <input type="number" id="p-tikka-num" value="4" min="0" max="20" oninput="syncPizza('tikka')">
+          </div>
+        </div>
+        <div class="input-group">
+          <label>🌶️ The Nduja Nag</label>
+          <div class="input-row">
+            <input type="range" id="p-nduja" min="0" max="20" value="3" oninput="updatePizzas()">
+            <input type="number" id="p-nduja-num" value="3" min="0" max="20" oninput="syncPizza('nduja')">
+          </div>
+        </div>
+        <div class="input-group">
+          <label>🌿 The Verderers' Veggie</label>
+          <div class="input-row">
+            <input type="range" id="p-veggie" min="0" max="20" value="3" oninput="updatePizzas()">
+            <input type="number" id="p-veggie-num" value="3" min="0" max="20" oninput="syncPizza('veggie')">
+          </div>
+        </div>
+      </div>
+      <div class="result-row" style="background:var(--dough); margin:16px -28px -28px; padding:12px 28px; border-radius:0 0 8px 8px;">
+        <span class="result-name" style="font-weight:600">Total Pizzas</span>
+        <span><span class="result-value" id="p-total">18</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: PIZZAS -->
+  <div id="tab-pizzas" class="tab-panel">
+    <p style="color:var(--muted); font-size:0.75rem; margin-bottom:20px;">Set your <strong>per-pizza quantities</strong> here — these are your recipe defaults. Totals on the Dough Calculator tab multiply these by your pizza counts automatically.</p>
+
+    <!-- Ancient Marinara -->
+    <div class="panel" style="margin-bottom:24px;">
+      <h3>🌊 The Ancient Marinara <span style="font-size:0.75rem; color:var(--muted); font-weight:400;">— Vegan</span></h3>
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:8px; margin-top:12px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
+          <div class="result-name" style="flex:1;">San Marzano Tomato</div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <input type="number" id="m-tom" value="100" step="1" min="0"
+              style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
+              oninput="updateTotals()">
+            <span class="result-unit">g</span>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
+          <div class="result-name" style="flex:1;">Roasted Garlic</div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <input type="number" id="m-garlic" value="1" step="1" min="0"
+              style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
+              oninput="updateTotals()">
+            <span class="result-unit">cloves</span>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
+          <div class="result-name" style="flex:1;">Dried Oregano</div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <input type="number" id="m-oregano" value="1" step="1" min="0"
+              style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
+              oninput="updateTotals()">
+            <span class="result-unit">pinches</span>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
+          <div class="result-name" style="flex:1;">Olive Oil</div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <input type="number" id="m-oil" value="10" step="1" min="0"
+              style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
+              oninput="updateTotals()">
+            <span class="result-unit">ml</span>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
+          <div class="result-name" style="flex:1;">Fresh Basil</div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <input type="number" id="m-basil" value="4" step="1" min="0"
+              style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
+              oninput="updateTotals()">
+            <span class="result-unit">leaves</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pepperoni Pony -->
+    <div class="panel" style="margin-bottom:24px;">
+      <h3>🐴 The Pepperoni Pony</h3>
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:8px; margin-top:12px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
+          <div class="result-name" style="flex:1;">San Marzano Tomato</div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <input type="number" id="pp-tom" value="100" step="1" min="0"
+              style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
+              oninput="updateTotals()">
+            <span class="result-unit">g</span>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
+          <div class="result-name" style="flex:1;">Mozzarella</div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <input type="number" id="pp-mozz" value="100" step="1" min="0"
+              style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
+              oninput="updateTotals()">
+            <span class="result-unit">g</span>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
+          <div class="result-name" style="flex:1;">Pepperoni</div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <input type="number" id="pp-pep" value="50" step="1" min="0"
+              style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
+              oninput="updateTotals()">
+            <span class="result-unit">g</span>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
+          <div class="result-name" style="flex:1;">Pecorino</div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <input type="number" id="pp-pec" value="8" step="1" min="0"
+              style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
+              oninput="updateTotals()">
+            <span class="result-unit">g</span>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
+          <div class="result-name" style="flex:1;">Hot Honey</div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <input type="number" id="pp-honey" value="1" step="1" min="0"
+              style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
+              oninput="updateTotals()">
+            <span class="result-unit">drizzles</span>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
+          <div class="result-name" style="flex:1;">Fresh Basil</div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <input type="number" id="pp-basil" value="4" step="1" min="0"
+              style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
+              oninput="updateTotals()">
+            <span class="result-unit">leaves</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tikka Trotter -->
+    <div class="panel" style="margin-bottom:24px;">
+      <h3>🐴 The Tikka Trotter</h3>
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:8px; margin-top:12px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
+          <div class="result-name" style="flex:1;">Tikka Tomato Base</div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <input type="number" id="tt-tom" value="100" step="1" min="0"
+              style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
+              oninput="updateTotals()">
+            <span class="result-unit">g</span>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
+          <div class="result-name" style="flex:1;">Mozzarella</div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <input type="number" id="tt-mozz" value="100" step="1" min="0"
+              style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
+              oninput="updateTotals()">
+            <span class="result-unit">g</span>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
+          <div class="result-name" style="flex:1;">Tandoori Chicken</div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <input type="number" id="tt-chicken" value="150" step="1" min="0"
+              style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
+              oninput="updateTotals()">
+            <span class="result-unit">g</span>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
+          <div class="result-name" style="flex:1;">Pecorino</div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <input type="number" id="tt-pec" value="8" step="1" min="0"
+              style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
+              oninput="updateTotals()">
+            <span class="result-unit">g</span>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
+          <div class="result-name" style="flex:1;">Red Onion</div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <input type="number" id="tt-onion" value="1" step="1" min="0"
+              style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
+              oninput="updateTotals()">
+            <span class="result-unit">medium</span>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
+          <div class="result-name" style="flex:1;">Fresh Coriander</div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <input type="number" id="tt-cor" value="1" step="1" min="0"
+              style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
+              oninput="updateTotals()">
+            <span class="result-unit">bunch</span>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
+          <div class="result-name" style="flex:1;">Mango Chutney</div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <input type="number" id="tt-mango" value="1" step="1" min="0"
+              style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
+              oninput="updateTotals()">
+            <span class="result-unit">tbsp</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nduja Nag -->
+    <div class="panel" style="margin-bottom:24px;">
+      <h3>🌶️ The Nduja Nag</h3>
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:8px; margin-top:12px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
+          <div class="result-name" style="flex:1;">San Marzano Tomato</div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <input type="number" id="nn-tom" value="100" step="1" min="0"
+              style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
+              oninput="updateTotals()">
+            <span class="result-unit">g</span>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
+          <div class="result-name" style="flex:1;">Mozzarella</div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <input type="number" id="nn-mozz" value="100" step="1" min="0"
+              style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
+              oninput="updateTotals()">
+            <span class="result-unit">g</span>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
+          <div class="result-name" style="flex:1;">Nduja</div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <input type="number" id="nn-nduja" value="50" step="1" min="0"
+              style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
+              oninput="updateTotals()">
+            <span class="result-unit">g</span>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
+          <div class="result-name" style="flex:1;">Pecorino</div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <input type="number" id="nn-pec" value="8" step="1" min="0"
+              style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
+              oninput="updateTotals()">
+            <span class="result-unit">g</span>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
+          <div class="result-name" style="flex:1;">Hot Honey</div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <input type="number" id="nn-honey" value="1" step="1" min="0"
+              style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
+              oninput="updateTotals()">
+            <span class="result-unit">drizzles</span>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
+          <div class="result-name" style="flex:1;">Fresh Basil</div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <input type="number" id="nn-basil" value="4" step="1" min="0"
+              style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
+              oninput="updateTotals()">
+            <span class="result-unit">leaves</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Verderers Veggie -->
+    <div class="panel" style="margin-bottom:24px;">
+      <h3>🌿 The Verderers' Veggie <span style="font-size:0.75rem; color:var(--muted); font-weight:400;">— Vegetarian</span></h3>
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:8px; margin-top:12px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
+          <div class="result-name" style="flex:1;">San Marzano Tomato</div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <input type="number" id="vv-tom" value="100" step="1" min="0"
+              style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
+              oninput="updateTotals()">
+            <span class="result-unit">g</span>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
+          <div class="result-name" style="flex:1;">Mozzarella</div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <input type="number" id="vv-mozz" value="100" step="1" min="0"
+              style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
+              oninput="updateTotals()">
+            <span class="result-unit">g</span>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
+          <div class="result-name" style="flex:1;">Pecorino</div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <input type="number" id="vv-pec" value="8" step="1" min="0"
+              style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
+              oninput="updateTotals()">
+            <span class="result-unit">g</span>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
+          <div class="result-name" style="flex:1;">Roasted Mixed Peppers</div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <input type="number" id="vv-peppers" value="1" step="1" min="0"
+              style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
+              oninput="updateTotals()">
+            <span class="result-unit">peppers</span>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
+          <div class="result-name" style="flex:1;">Red Onion</div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <input type="number" id="vv-onion" value="1" step="1" min="0"
+              style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
+              oninput="updateTotals()">
+            <span class="result-unit">medium</span>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
+          <div class="result-name" style="flex:1;">Olives (green, pitted)</div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <input type="number" id="vv-olives" value="25" step="1" min="0"
+              style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
+              oninput="updateTotals()">
+            <span class="result-unit">g</span>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
+          <div class="result-name" style="flex:1;">Green Pesto</div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <input type="number" id="vv-pesto" value="1" step="1" min="0"
+              style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
+              oninput="updateTotals()">
+            <span class="result-unit">tbsp</span>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
+          <div class="result-name" style="flex:1;">Fresh Basil</div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <input type="number" id="vv-basil" value="4" step="1" min="0"
+              style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
+              oninput="updateTotals()">
+            <span class="result-unit">leaves</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="insight-box">
+      💡 <strong>Tip:</strong> Adjust pizza counts on the Dough Calculator tab to auto-fill quantities, then fine-tune any field here directly. Changes here also update the totals summary.
+    </div>
+  </div>
+
+  <!-- TAB: BATCH LOG -->
+  <div id="tab-batches" class="tab-panel">
+    <div class="panel" style="margin-bottom:24px">
+      <h3>Recorded Batches</h3>
+      <p style="color:var(--muted); font-size:0.75rem; margin-bottom:20px;">7 batches from your data. Hydration consistency flagged where it deviates from your 61% target.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Balls</th>
+            <th>Room Temp</th>
+            <th>Water (g)</th>
+            <th>Salt (g)</th>
+            <th>Yeast (g)</th>
+            <th>Type 1 (g)</th>
+            <th>Type 00 (g)</th>
+            <th>Hydration</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="batch-tbody"></tbody>
+      </table>
+    </div>
+
+    <div class="insight-box">
+      💡 <strong>Pattern spotted:</strong> Your batch sizes vary from 6 to 24 balls — you're clearly scaling up. The 20 Jun and an unknown-date batch both had <em>room temperature unrecorded</em> — worth logging consistently since your yeast guide shows temperature has a big effect on quantity. Salt held steady at ~2g/ball across almost all batches. ✅
+    </div>
+  </div>
+
+  <!-- TAB: INGREDIENTS -->
+  <div id="tab-ingredients" class="tab-panel">
+    <div class="panel" style="margin-bottom:24px">
+      <h3>Ingredient Breakdown — Per Pizza (Base Recipe)</h3>
+      <p style="color:var(--muted); font-size:0.75rem; margin-bottom:20px;">Dough + toppings. Visualised as proportion of total ingredients by weight.</p>
+
+      <div id="ingredient-bars"></div>
+    </div>
+
+    <div class="calc-grid">
+      <div class="panel">
+        <h3>Dough per Ball</h3>
+        <div class="result-row"><span class="result-name">Type 1 Flour</span><span><span class="result-value">25</span><span class="result-unit">g</span></span></div>
+        <div class="result-row"><span class="result-name">Type 00 Flour</span><span><span class="result-value">142</span><span class="result-unit">g</span></span></div>
+        <div class="result-row"><span class="result-name">Total Flour</span><span><span class="result-value">167</span><span class="result-unit">g</span></span></div>
+        <div class="result-row"><span class="result-name">Water</span><span><span class="result-value">~102</span><span class="result-unit">g</span></span></div>
+        <div class="result-row"><span class="result-name">Salt</span><span><span class="result-value">3.3</span><span class="result-unit">g</span></span></div>
+        <div class="result-row"><span class="result-name">Yeast</span><span><span class="result-value">~0.12</span><span class="result-unit">g</span></span></div>
+        <div class="result-row" style="font-weight:600"><span class="result-name">Ball Weight</span><span><span class="result-value">265</span><span class="result-unit">g</span></span></div>
+      </div>
+      <div class="panel">
+        <h3>Toppings per Pizza</h3>
+        <div class="result-row"><span class="result-name">Mozzarella</span><span><span class="result-value">100</span><span class="result-unit">g</span></span></div>
+        <div class="result-row"><span class="result-name">Tomato Sauce</span><span><span class="result-value">100</span><span class="result-unit">g</span></span></div>
+        <div class="result-row"><span class="result-name">Basil</span><span><span class="result-value">4</span><span class="result-unit">leaves</span></span></div>
+        <div class="result-row"><span class="result-name">Pecorino</span><span><span class="result-value">20</span><span class="result-unit">g</span></span></div>
+        <div class="result-row"><span class="result-name">Semolina</span><span><span class="result-value">8</span><span class="result-unit">g</span></span></div>
+        <div class="result-row" style="font-weight:600"><span class="result-name">Total Toppings</span><span><span class="result-value">228g+</span><span class="result-unit">+ leaves</span></span></div>
+      </div>
+    </div>
+
+    <div class="insight-box" style="margin-top:24px">
+      💡 <strong>Observation:</strong> Your dough-to-topping ratio is roughly 265g dough : 228g toppings — well-balanced for Neapolitan style where the crust is the star. Pecorino at 20g/pizza adds a premium finishing touch. Semolina at 8g is used sparingly for stretch, which is smart — too much toughens the base.
+    </div>
+  </div>
+
+  <!-- TAB: YEAST -->
+  <div id="tab-yeast" class="tab-panel">
+    <div class="panel" style="margin-bottom:24px;">
+      <h3>Temperature → Yeast Guide</h3>
+      <p style="color:var(--muted); font-size:0.75rem; margin-bottom:20px;">From your lookup table. Click a temperature to highlight. Higher temps = less yeast needed (faster fermentation).</p>
+
+      <div style="margin-bottom:16px;">
+        <span style="color:var(--muted); font-size:0.75rem;">Your room temp today:</span>
+        <div style="display:flex; align-items:center; gap:24px; flex-wrap:wrap; margin-top:12px;">
+          <div style="display:flex; flex-direction:column; gap:6px; flex:1; min-width:200px;">
+            <div style="display:flex; justify-content:space-between; font-size:0.65rem; color:var(--muted);">
+              <span>17°C — coolest</span><span>28°C — warmest</span>
+            </div>
+            <input type="range" id="tempSlider" min="17" max="28" value="21" step="1"
+              oninput="highlightTemp()"
+              style="width:100%; cursor:pointer; height:8px; border-radius:4px;">
+            <div style="text-align:center; margin-top:4px;">
+              <span style="font-family:'DM Serif Display',serif; font-size:2.2rem; color:var(--green);" id="tempDisplay">21°C</span>
+            </div>
+          </div>
+          <div style="background:var(--dough); border-radius:8px; padding:16px 28px; text-align:center; min-width:150px; border:1px solid rgba(255,255,255,0.05);">
+            <div style="font-size:0.6rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); margin-bottom:6px;">Yeast per batch</div>
+            <div style="font-family:'DM Serif Display',serif; font-size:3rem; line-height:1; color:var(--green);" id="yeast-recommendation">0.6g</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="yeast-grid" id="yeast-grid"></div>
+    </div>
+
+    <div class="insight-box">
+      💡 <strong>Craft note:</strong> Your yeast table is well-calibrated — 1.3g at 17°C down to 0.4g at 25°C+. The plateau at 0.4g from 25–28°C suggests a lower bound you've set to avoid under-fermentation even on warm days. This kind of temperature awareness is what separates consistent pizza from great pizza.
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // === BATCH DATA from spreadsheet ===
+  const batches = [
+    { date: '15 Jun 2025', balls: 9, temp: 20, water: 930, salt: 37.5, yeast: 0.75, t1: 0, t00: 1500 },
+    { date: '20 Jun 2025', balls: 6, temp: 24.4, water: 620, salt: 20, yeast: 0.4, t1: 300, t00: 700 },
+    { date: '?', balls: 6, temp: 25.9, water: 610, salt: 20, yeast: 0.38, t1: 300, t00: 700 },
+    { date: '22 Jun 2025', balls: 12, temp: 25, water: 1120, salt: 40, yeast: 0.8, t1: 300, t00: 1700 },
+    { date: '26 Jun 2025', balls: 24, temp: 25.5, water: 2440, salt: 80, yeast: 1.6, t1: 600, t00: 3400 },
+    { date: '02 Aug 2025', balls: 18, temp: 23, water: 1800, salt: 60, yeast: 1.2, t1: 450, t00: 2550 },
+    { date: '05 Sep 2025', balls: 18, temp: 21, water: 1833, salt: 60, yeast: 1.8, t1: 450, t00: 2555 },
+  ];
+
+  const yeastData = [
+    {temp:17, yeast:1.3},{temp:18, yeast:1.0},{temp:19, yeast:0.9},
+    {temp:20, yeast:0.7},{temp:21, yeast:0.6},{temp:22, yeast:0.5},
+    {temp:23, yeast:0.45},{temp:24, yeast:0.4},{temp:25, yeast:0.4},
+    {temp:26, yeast:0.4},{temp:27, yeast:0.4},{temp:28, yeast:0.4},
+  ];
+
+  // === BUILD BATCH TABLE ===
+  function calcHydration(b) {
+    const flour = b.t1 + b.t00;
+    if (!flour) return null;
+    return ((b.water / flour) * 100).toFixed(1);
+  }
+
+  const tbody = document.getElementById('batch-tbody');
+  batches.forEach(b => {
+    const hyd = calcHydration(b);
+    const hydVal = hyd ? parseFloat(hyd) : null;
+    let badge = '';
+    if (!hydVal) badge = `<span class="badge badge-amber">No flour data</span>`;
+    else if (hydVal >= 59 && hydVal <= 63) badge = `<span class="badge badge-green">${hyd}% ✓</span>`;
+    else if (hydVal < 59) badge = `<span class="badge badge-red">${hyd}% Low</span>`;
+    else badge = `<span class="badge badge-amber">${hyd}% High</span>`;
+
+    const tempBadge = b.temp === '?' ? `<span class="badge badge-amber">?</span>` : `${b.temp}°C`;
+
+    tbody.innerHTML += `<tr>
+      <td>${b.date}</td>
+      <td>${b.balls}</td>
+      <td>${tempBadge}</td>
+      <td>${b.water}</td>
+      <td>${b.salt}</td>
+      <td>${b.yeast}</td>
+      <td>${b.t1 || '—'}</td>
+      <td>${b.t00}</td>
+      <td>${badge}</td>
+      <td>${b.date === '?' ? '<span class="badge badge-amber">Date missing</span>' : '<span class="badge badge-green">Logged</span>'}</td>
+    </tr>`;
+  });
+
+  // === BUILD INGREDIENT BARS ===
+  const ingredients = [
+    { name: 'Type 00 Flour', amount: 142, unit: 'g', color: '#C8883A' },
+    { name: 'Water', amount: 102, unit: 'g', color: '#2C5F8A' },
+    { name: 'Mozzarella', amount: 100, unit: 'g', color: '#D4C4A0' },
+    { name: 'Tom. Sauce', amount: 100, unit: 'g', color: '#C0392B' },
+    { name: 'Type 1 Flour', amount: 25, unit: 'g', color: '#E8A84A' },
+    { name: 'Pecorino', amount: 20, unit: 'g', color: '#8B7355' },
+    { name: 'Semolina', amount: 8, unit: 'g', color: '#D4B896' },
+    { name: 'Salt', amount: 3.3, unit: 'g', color: '#7A7570' },
+  ];
+
+  const maxAmt = Math.max(...ingredients.map(i => i.amount));
+  const barsEl = document.getElementById('ingredient-bars');
+  ingredients.forEach(ing => {
+    const pct = (ing.amount / maxAmt * 100).toFixed(1);
+    barsEl.innerHTML += `<div class="ingredient-bar-row">
+      <div class="ingredient-bar-name">${ing.name}</div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:${pct}%; background:${ing.color}"></div>
+      </div>
+      <div class="ingredient-bar-amount">${ing.amount}${ing.unit}</div>
+    </div>`;
+  });
+
+  // === BUILD YEAST GRID ===
+  const yeastGrid = document.getElementById('yeast-grid');
+  yeastData.forEach(y => {
+    yeastGrid.innerHTML += `<div class="yeast-cell" id="yc-${y.temp}">
+      <div class="yeast-temp">${y.temp}°C</div>
+      <div class="yeast-val">${y.yeast}g</div>
+    </div>`;
+  });
+
+  function highlightTemp() {
+    const val = parseInt(document.getElementById('tempSlider').value);
+    document.getElementById('tempDisplay').textContent = val + '°C';
+    document.querySelectorAll('.yeast-cell').forEach(c => c.classList.remove('highlight'));
+    const cell = document.getElementById(`yc-${val}`);
+    if (cell) {
+      cell.classList.add('highlight');
+      cell.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+    const yeast = yeastData.find(y => y.temp == val);
+    if (yeast) {
+      document.getElementById('yeast-recommendation').textContent = yeast.yeast + 'g';
+    }
+  }
+  // Init on load
+  window.addEventListener('load', function() { setTimeout(highlightTemp, 200); });
+
+  // === CALCULATOR ===
+  function updateCalc() {
+    const n = parseInt(document.getElementById('pizzaCount').value);
+    const hyd = parseInt(document.getElementById('hydration').value);
+    const t1pct = parseInt(document.getElementById('t1ratio').value) / 100;
+    const temp = parseInt(document.getElementById('calcTemp').value);
+
+    document.getElementById('pizzaCountNum').value = n;
+    document.getElementById('hydrationNum').value = hyd;
+    document.getElementById('t1ratioNum').value = parseInt(document.getElementById('t1ratio').value);
+    document.getElementById('calcTempNum').value = temp;
+
+    const flourPerBall = 167;
+    const totalFlour = flourPerBall * n;
+    const t1 = Math.round(totalFlour * t1pct);
+    const t00 = totalFlour - t1;
+    const water = Math.round(totalFlour * hyd / 100);
+    const salt = Math.round(totalFlour * 0.02 * 10) / 10;
+
+    // Use yeast lookup table: value is grams per kg of total flour
+    const yeastEntry = yeastData.find(y => y.temp === temp);
+    const yeastPerKg = yeastEntry ? yeastEntry.yeast : 0.6;
+    const yeast = Math.round((yeastPerKg * totalFlour / 1000) * 10) / 10;
+
+    const total = totalFlour + water + salt + yeast;
+
+    document.getElementById('r-t1').textContent = t1;
+    document.getElementById('r-t00').textContent = t00;
+    document.getElementById('r-flour').textContent = totalFlour;
+    document.getElementById('r-water').textContent = water;
+    document.getElementById('r-salt').textContent = salt;
+    document.getElementById('r-yeast').textContent = yeast;
+    document.getElementById('r-yeast-temp').textContent = '@ ' + temp + '°C';
+    document.getElementById('r-total').textContent = Math.round(total);
+    document.getElementById('topping-count').textContent = n;
+
+    // Update semolina from total pizzas
+    document.getElementById('t-sem').textContent = n * 8;
+  }
+
+  function syncSlider() {
+    document.getElementById('pizzaCount').value = document.getElementById('pizzaCountNum').value;
+    updateCalc();
+  }
+
+  function syncHydration() {
+    document.getElementById('hydration').value = document.getElementById('hydrationNum').value;
+    updateCalc();
+  }
+
+  function syncPizza(name) {
+    document.getElementById('p-' + name).value = document.getElementById('p-' + name + '-num').value;
+    updatePizzas();
+  }
+
+  function updateTotals() {
+    // Per-pizza recipe values (from Pizza Toppings tab)
+    const r = id => parseFloat(document.getElementById(id).value) || 0;
+    // Pizza counts
+    const m  = parseInt(document.getElementById('p-marinara').value)  || 0;
+    const pp = parseInt(document.getElementById('p-pepperoni').value) || 0;
+    const tt = parseInt(document.getElementById('p-tikka').value)     || 0;
+    const nn = parseInt(document.getElementById('p-nduja').value)     || 0;
+    const vv = parseInt(document.getElementById('p-veggie').value)    || 0;
+
+    const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = Math.round(val); };
+
+    set('t-tom',     m*r('m-tom')    + pp*r('pp-tom')  + tt*r('tt-tom')  + nn*r('nn-tom')  + vv*r('vv-tom'));
+    set('t-mozz',    pp*r('pp-mozz') + tt*r('tt-mozz') + nn*r('nn-mozz') + vv*r('vv-mozz'));
+    set('t-pec',     pp*r('pp-pec')  + tt*r('tt-pec')  + nn*r('nn-pec')  + vv*r('vv-pec'));
+    set('t-basil',   m*r('m-basil')  + pp*r('pp-basil')+ nn*r('nn-basil')+ vv*r('vv-basil'));
+    set('t-oil',     m*r('m-oil'));
+    set('t-garlic',  m*r('m-garlic'));
+    set('t-pep',     pp*r('pp-pep'));
+    set('t-honey',   pp*r('pp-honey') + nn*r('nn-honey'));
+    set('t-chicken', tt*r('tt-chicken'));
+    set('t-onion',   tt*r('tt-onion') + vv*r('vv-onion'));
+    set('t-cor',     tt*r('tt-cor'));
+    set('t-mango',   tt*r('tt-mango'));
+    set('t-nduja',   nn*r('nn-nduja'));
+    set('t-peppers', vv*r('vv-peppers'));
+    set('t-olives',  vv*r('vv-olives'));
+    set('t-pesto',   vv*r('vv-pesto'));
+  }
+
+  function updatePizzas() {
+    const m  = parseInt(document.getElementById('p-marinara').value)  || 0;
+    const pp = parseInt(document.getElementById('p-pepperoni').value) || 0;
+    const tt = parseInt(document.getElementById('p-tikka').value)     || 0;
+    const nn = parseInt(document.getElementById('p-nduja').value)     || 0;
+    const vv = parseInt(document.getElementById('p-veggie').value)    || 0;
+
+    // Sync number inputs
+    document.getElementById('p-marinara-num').value = m;
+    document.getElementById('p-pepperoni-num').value = pp;
+    document.getElementById('p-tikka-num').value = tt;
+    document.getElementById('p-nduja-num').value = nn;
+    document.getElementById('p-veggie-num').value = vv;
+
+    const total = m + pp + tt + nn + vv;
+    document.getElementById('p-total').textContent = total;
+
+    // Sync pizza count slider to total
+    document.getElementById('pizzaCount').value = Math.min(total, 50);
+    document.getElementById('pizzaCountNum').value = total;
+    updateCalc();
+    updateTotals();
+  }
+
+  // Init pizza totals on load
+  window.addEventListener('load', function() { setTimeout(updatePizzas, 300); });
+
+  // === TABS ===
+  function showTab(id) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(`tab-${id}`).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  updateCalc();
+</script>
+</body>
+</html>
