@@ -337,7 +337,7 @@
     <p style="margin-top:8px;">Ingredient & Dough Analysis — Your Data</p>
   </div>
   <div style="text-align:right">
-    <p>7 batches logged</p>
+    <p>8 batches logged</p>
     <p>Temp range: 20–25°C</p>
   </div>
 </header>
@@ -397,6 +397,7 @@ function downloadSelf() {
     <button class="tab" onclick="showTab('batches')">📋 Batch Log</button>
     <button class="tab" onclick="showTab('ingredients')">🧂 Ingredients</button>
     <button class="tab" onclick="showTab('yeast')">🌡️ Yeast Guide</button>
+    <button class="tab" onclick="showTab('suppliers')">💷 Suppliers & Prices</button>
   </div>
 
   <!-- TAB: CALCULATOR -->
@@ -591,6 +592,61 @@ function downloadSelf() {
         <span><span class="result-value" id="p-total">18</span></span>
       </div>
     </div>
+
+    <div class="panel" style="margin-top:24px;overflow-x:auto;">
+      <h3>💷 Cost &amp; Margin</h3>
+      <p style="color:var(--muted);font-size:0.75rem;margin-bottom:16px;">Add prices in the Suppliers tab to see costs. Sell prices are editable.</p>
+      <table style="width:100%;border-collapse:collapse;font-size:0.85rem;">
+        <thead><tr>
+          <th style="text-align:left;padding:8px;border-bottom:2px solid var(--border);color:var(--muted);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;">Pizza</th>
+          <th style="text-align:right;padding:8px;border-bottom:2px solid var(--border);color:var(--muted);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;">Count</th>
+          <th style="text-align:right;padding:8px;border-bottom:2px solid var(--border);color:var(--muted);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;">Cost/pizza</th>
+          <th style="text-align:right;padding:8px;border-bottom:2px solid var(--border);color:var(--muted);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;">Sell price</th>
+          <th style="text-align:right;padding:8px;border-bottom:2px solid var(--border);color:var(--muted);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;">Revenue</th>
+          <th style="text-align:right;padding:8px;border-bottom:2px solid var(--border);color:var(--muted);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;">Margin</th>
+        </tr></thead>
+        <tbody>
+          <tr><td style="padding:8px;">🌊 Ancient Marinara</td>
+            <td style="text-align:right;padding:8px;" id="cm-m-count">4</td>
+            <td style="text-align:right;padding:8px;color:var(--green);font-weight:600;" id="cm-m-cpp">—</td>
+            <td style="text-align:right;padding:8px;white-space:nowrap;">£<input type="number" id="cm-m-sell" value="11.50" step="0.50" min="0" style="width:55px;background:var(--dough);border:1px solid var(--border);color:var(--text);padding:3px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;text-align:right;" oninput="updateCosts()"></td>
+            <td style="text-align:right;padding:8px;font-weight:600;" id="cm-m-rev">—</td>
+            <td style="text-align:right;padding:8px;font-weight:600;" id="cm-m-margin">—</td></tr>
+          <tr style="background:var(--dough);"><td style="padding:8px;">🐴 Pepperoni Pony</td>
+            <td style="text-align:right;padding:8px;" id="cm-pp-count">4</td>
+            <td style="text-align:right;padding:8px;color:var(--green);font-weight:600;" id="cm-pp-cpp">—</td>
+            <td style="text-align:right;padding:8px;white-space:nowrap;">£<input type="number" id="cm-pp-sell" value="11.50" step="0.50" min="0" style="width:55px;background:var(--card);border:1px solid var(--border);color:var(--text);padding:3px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;text-align:right;" oninput="updateCosts()"></td>
+            <td style="text-align:right;padding:8px;font-weight:600;" id="cm-pp-rev">—</td>
+            <td style="text-align:right;padding:8px;font-weight:600;" id="cm-pp-margin">—</td></tr>
+          <tr><td style="padding:8px;">🐴 Tikka Trotter</td>
+            <td style="text-align:right;padding:8px;" id="cm-tt-count">4</td>
+            <td style="text-align:right;padding:8px;color:var(--green);font-weight:600;" id="cm-tt-cpp">—</td>
+            <td style="text-align:right;padding:8px;white-space:nowrap;">£<input type="number" id="cm-tt-sell" value="11.50" step="0.50" min="0" style="width:55px;background:var(--dough);border:1px solid var(--border);color:var(--text);padding:3px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;text-align:right;" oninput="updateCosts()"></td>
+            <td style="text-align:right;padding:8px;font-weight:600;" id="cm-tt-rev">—</td>
+            <td style="text-align:right;padding:8px;font-weight:600;" id="cm-tt-margin">—</td></tr>
+          <tr style="background:var(--dough);"><td style="padding:8px;">🌶️ Nduja Nag</td>
+            <td style="text-align:right;padding:8px;" id="cm-nn-count">3</td>
+            <td style="text-align:right;padding:8px;color:var(--green);font-weight:600;" id="cm-nn-cpp">—</td>
+            <td style="text-align:right;padding:8px;white-space:nowrap;">£<input type="number" id="cm-nn-sell" value="12.50" step="0.50" min="0" style="width:55px;background:var(--card);border:1px solid var(--border);color:var(--text);padding:3px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;text-align:right;" oninput="updateCosts()"></td>
+            <td style="text-align:right;padding:8px;font-weight:600;" id="cm-nn-rev">—</td>
+            <td style="text-align:right;padding:8px;font-weight:600;" id="cm-nn-margin">—</td></tr>
+          <tr><td style="padding:8px;">🌿 Verderers' Veggie</td>
+            <td style="text-align:right;padding:8px;" id="cm-vv-count">3</td>
+            <td style="text-align:right;padding:8px;color:var(--green);font-weight:600;" id="cm-vv-cpp">—</td>
+            <td style="text-align:right;padding:8px;white-space:nowrap;">£<input type="number" id="cm-vv-sell" value="11.50" step="0.50" min="0" style="width:55px;background:var(--dough);border:1px solid var(--border);color:var(--text);padding:3px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;text-align:right;" oninput="updateCosts()"></td>
+            <td style="text-align:right;padding:8px;font-weight:600;" id="cm-vv-rev">—</td>
+            <td style="text-align:right;padding:8px;font-weight:600;" id="cm-vv-margin">—</td></tr>
+        </tbody>
+        <tfoot><tr style="border-top:2px solid var(--border);">
+          <td style="padding:10px;font-weight:700;">Total</td>
+          <td style="text-align:right;padding:10px;font-weight:700;" id="cm-total-count">18</td>
+          <td style="text-align:right;padding:10px;color:var(--green);font-weight:700;" id="cm-total-cost">—</td>
+          <td></td>
+          <td style="text-align:right;padding:10px;font-weight:700;" id="cm-total-rev">—</td>
+          <td style="text-align:right;padding:10px;font-weight:700;" id="cm-total-margin">—</td>
+        </tr></tfoot>
+      </table>
+    </div>
   </div>
 
   <!-- TAB: PIZZAS -->
@@ -625,7 +681,7 @@ function downloadSelf() {
             <input type="number" id="m-oregano" value="1" step="1" min="0"
               style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
               oninput="updateTotals()">
-            <span class="result-unit">pinches</span>
+            <span class="result-unit">g</span>
           </div>
         </div>
         <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
@@ -640,7 +696,7 @@ function downloadSelf() {
         <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
           <div class="result-name" style="flex:1;">Fresh Basil</div>
           <div style="display:flex; align-items:center; gap:6px;">
-            <input type="number" id="m-basil" value="4" step="1" min="0"
+            <input type="number" id="m-basil" value="2.4" step="1" min="0"
               style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
               oninput="updateTotals()">
             <span class="result-unit">leaves</span>
@@ -665,7 +721,7 @@ function downloadSelf() {
         <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
           <div class="result-name" style="flex:1;">Mozzarella</div>
           <div style="display:flex; align-items:center; gap:6px;">
-            <input type="number" id="pp-mozz" value="100" step="1" min="0"
+            <input type="number" id="pp-mozz" value="75" step="1" min="0"
               style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
               oninput="updateTotals()">
             <span class="result-unit">g</span>
@@ -692,16 +748,16 @@ function downloadSelf() {
         <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
           <div class="result-name" style="flex:1;">Hot Honey</div>
           <div style="display:flex; align-items:center; gap:6px;">
-            <input type="number" id="pp-honey" value="1" step="1" min="0"
+            <input type="number" id="pp-honey" value="8" step="1" min="0"
               style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
               oninput="updateTotals()">
-            <span class="result-unit">drizzles</span>
+            <span class="result-unit">g</span>
           </div>
         </div>
         <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
           <div class="result-name" style="flex:1;">Fresh Basil</div>
           <div style="display:flex; align-items:center; gap:6px;">
-            <input type="number" id="pp-basil" value="4" step="1" min="0"
+            <input type="number" id="pp-basil" value="2.4" step="1" min="0"
               style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
               oninput="updateTotals()">
             <span class="result-unit">leaves</span>
@@ -726,7 +782,7 @@ function downloadSelf() {
         <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
           <div class="result-name" style="flex:1;">Mozzarella</div>
           <div style="display:flex; align-items:center; gap:6px;">
-            <input type="number" id="tt-mozz" value="100" step="1" min="0"
+            <input type="number" id="tt-mozz" value="75" step="1" min="0"
               style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
               oninput="updateTotals()">
             <span class="result-unit">g</span>
@@ -735,7 +791,7 @@ function downloadSelf() {
         <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
           <div class="result-name" style="flex:1;">Tandoori Chicken</div>
           <div style="display:flex; align-items:center; gap:6px;">
-            <input type="number" id="tt-chicken" value="150" step="1" min="0"
+            <input type="number" id="tt-chicken" value="100" step="1" min="0"
               style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
               oninput="updateTotals()">
             <span class="result-unit">g</span>
@@ -753,28 +809,28 @@ function downloadSelf() {
         <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
           <div class="result-name" style="flex:1;">Red Onion</div>
           <div style="display:flex; align-items:center; gap:6px;">
-            <input type="number" id="tt-onion" value="1" step="1" min="0"
+            <input type="number" id="tt-onion" value="60" step="1" min="0"
               style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
               oninput="updateTotals()">
-            <span class="result-unit">medium</span>
+            <span class="result-unit">g</span>
           </div>
         </div>
         <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
           <div class="result-name" style="flex:1;">Fresh Coriander</div>
           <div style="display:flex; align-items:center; gap:6px;">
-            <input type="number" id="tt-cor" value="1" step="1" min="0"
+            <input type="number" id="tt-cor" value="10" step="1" min="0"
               style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
               oninput="updateTotals()">
-            <span class="result-unit">bunch</span>
+            <span class="result-unit">g</span>
           </div>
         </div>
         <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
           <div class="result-name" style="flex:1;">Mango Chutney</div>
           <div style="display:flex; align-items:center; gap:6px;">
-            <input type="number" id="tt-mango" value="1" step="1" min="0"
+            <input type="number" id="tt-mango" value="5" step="1" min="0"
               style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
               oninput="updateTotals()">
-            <span class="result-unit">tbsp</span>
+            <span class="result-unit">g</span>
           </div>
         </div>
       </div>
@@ -796,7 +852,7 @@ function downloadSelf() {
         <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
           <div class="result-name" style="flex:1;">Mozzarella</div>
           <div style="display:flex; align-items:center; gap:6px;">
-            <input type="number" id="nn-mozz" value="100" step="1" min="0"
+            <input type="number" id="nn-mozz" value="75" step="1" min="0"
               style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
               oninput="updateTotals()">
             <span class="result-unit">g</span>
@@ -805,7 +861,7 @@ function downloadSelf() {
         <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
           <div class="result-name" style="flex:1;">Nduja</div>
           <div style="display:flex; align-items:center; gap:6px;">
-            <input type="number" id="nn-nduja" value="50" step="1" min="0"
+            <input type="number" id="nn-nduja" value="10" step="1" min="0"
               style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
               oninput="updateTotals()">
             <span class="result-unit">g</span>
@@ -823,16 +879,16 @@ function downloadSelf() {
         <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
           <div class="result-name" style="flex:1;">Hot Honey</div>
           <div style="display:flex; align-items:center; gap:6px;">
-            <input type="number" id="nn-honey" value="1" step="1" min="0"
+            <input type="number" id="nn-honey" value="8" step="1" min="0"
               style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
               oninput="updateTotals()">
-            <span class="result-unit">drizzles</span>
+            <span class="result-unit">g</span>
           </div>
         </div>
         <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
           <div class="result-name" style="flex:1;">Fresh Basil</div>
           <div style="display:flex; align-items:center; gap:6px;">
-            <input type="number" id="nn-basil" value="4" step="1" min="0"
+            <input type="number" id="nn-basil" value="2.4" step="1" min="0"
               style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
               oninput="updateTotals()">
             <span class="result-unit">leaves</span>
@@ -857,7 +913,7 @@ function downloadSelf() {
         <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
           <div class="result-name" style="flex:1;">Mozzarella</div>
           <div style="display:flex; align-items:center; gap:6px;">
-            <input type="number" id="vv-mozz" value="100" step="1" min="0"
+            <input type="number" id="vv-mozz" value="75" step="1" min="0"
               style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
               oninput="updateTotals()">
             <span class="result-unit">g</span>
@@ -875,19 +931,19 @@ function downloadSelf() {
         <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
           <div class="result-name" style="flex:1;">Roasted Mixed Peppers</div>
           <div style="display:flex; align-items:center; gap:6px;">
-            <input type="number" id="vv-peppers" value="1" step="1" min="0"
+            <input type="number" id="vv-peppers" value="80" step="1" min="0"
               style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
               oninput="updateTotals()">
-            <span class="result-unit">peppers</span>
+            <span class="result-unit">g</span>
           </div>
         </div>
         <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
           <div class="result-name" style="flex:1;">Red Onion</div>
           <div style="display:flex; align-items:center; gap:6px;">
-            <input type="number" id="vv-onion" value="1" step="1" min="0"
+            <input type="number" id="vv-onion" value="60" step="1" min="0"
               style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
               oninput="updateTotals()">
-            <span class="result-unit">medium</span>
+            <span class="result-unit">g</span>
           </div>
         </div>
         <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
@@ -902,16 +958,16 @@ function downloadSelf() {
         <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
           <div class="result-name" style="flex:1;">Green Pesto</div>
           <div style="display:flex; align-items:center; gap:6px;">
-            <input type="number" id="vv-pesto" value="1" step="1" min="0"
+            <input type="number" id="vv-pesto" value="2" step="1" min="0"
               style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
               oninput="updateTotals()">
-            <span class="result-unit">tbsp</span>
+            <span class="result-unit">g</span>
           </div>
         </div>
         <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; border:1px solid var(--border); gap:12px;">
           <div class="result-name" style="flex:1;">Fresh Basil</div>
           <div style="display:flex; align-items:center; gap:6px;">
-            <input type="number" id="vv-basil" value="4" step="1" min="0"
+            <input type="number" id="vv-basil" value="2.4" step="1" min="0"
               style="width:70px; text-align:right; font-family:inherit; font-size:1rem; font-weight:600; color:var(--green); background:var(--dough); border:1px solid var(--border); padding:4px 8px; border-radius:4px;"
               oninput="updateTotals()">
             <span class="result-unit">leaves</span>
@@ -925,11 +981,451 @@ function downloadSelf() {
     </div>
   </div>
 
+  <!-- TAB: SUPPLIERS -->
+  <div id="tab-suppliers" class="tab-panel">
+    <p style="color:var(--muted);font-size:0.75rem;margin-bottom:20px;">Enter supplier, pack size and price for each ingredient. Cost per gram is auto-calculated and feeds into the Cost &amp; Margin panel on the Dough Calculator tab.</p>
+
+    <div class="panel" style="margin-bottom:24px;overflow-x:auto;">
+      <h3>🌾 Dough Ingredients</h3>
+      <table style="width:100%;border-collapse:collapse;font-size:0.85rem;">
+        <thead><tr><th style="text-align:left;padding:8px;border-bottom:2px solid var(--border);color:var(--muted);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;white-space:nowrap;">Ingredient</th><th style="text-align:left;padding:8px;border-bottom:2px solid var(--border);color:var(--muted);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;white-space:nowrap;">Supplier</th><th style="text-align:left;padding:8px;border-bottom:2px solid var(--border);color:var(--muted);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;white-space:nowrap;">Pack Size</th><th style="text-align:left;padding:8px;border-bottom:2px solid var(--border);color:var(--muted);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;white-space:nowrap;">Pack Price</th><th style="text-align:right;padding:8px;border-bottom:2px solid var(--border);color:var(--muted);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;">Cost/g</th></tr></thead>
+        <tbody>
+        <tr>
+          <td style="font-weight:500;padding:6px 8px;">Type 00 Flour</td>
+          <td style="padding:6px 4px;"><input type="text" id="sup-t00-supplier" value="Ratton" placeholder="Supplier"
+            style="width:100%;background:var(--dough);border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:4px;font-family:inherit;font-size:0.82rem;"
+            oninput="updateCosts()"></td>
+          <td style="padding:6px 4px;white-space:nowrap;">
+            <input type="number" id="sup-t00-size" value="3000" step="any" min="0" placeholder="0"
+              style="width:70px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"> <span style="color:var(--muted);font-size:0.72rem;">g</span>
+          </td>
+          <td style="padding:6px 4px;white-space:nowrap;">£<input type="number" id="sup-t00-price" value="6.99" step="0.01" min="0" placeholder="0.00"
+              style="width:65px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"></td>
+          <td style="text-align:right;padding:6px 8px;font-weight:600;color:var(--green);font-size:0.82rem;" id="sup-t00-cpg">—</td>
+        </tr>
+        <tr>
+          <td style="font-weight:500;padding:6px 8px;">Type 1 Flour</td>
+          <td style="padding:6px 4px;"><input type="text" id="sup-t1-supplier" value="Ratton" placeholder="Supplier"
+            style="width:100%;background:var(--dough);border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:4px;font-family:inherit;font-size:0.82rem;"
+            oninput="updateCosts()"></td>
+          <td style="padding:6px 4px;white-space:nowrap;">
+            <input type="number" id="sup-t1-size" value="3000" step="any" min="0" placeholder="0"
+              style="width:70px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"> <span style="color:var(--muted);font-size:0.72rem;">g</span>
+          </td>
+          <td style="padding:6px 4px;white-space:nowrap;">£<input type="number" id="sup-t1-price" value="6.49" step="0.01" min="0" placeholder="0.00"
+              style="width:65px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"></td>
+          <td style="text-align:right;padding:6px 8px;font-weight:600;color:var(--green);font-size:0.82rem;" id="sup-t1-cpg">—</td>
+        </tr>
+        <tr>
+          <td style="font-weight:500;padding:6px 8px;">Yeast (fresh)</td>
+          <td style="padding:6px 4px;"><input type="text" id="sup-yeast-supplier" value="Ratton" placeholder="Supplier"
+            style="width:100%;background:var(--dough);border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:4px;font-family:inherit;font-size:0.82rem;"
+            oninput="updateCosts()"></td>
+          <td style="padding:6px 4px;white-space:nowrap;">
+            <input type="number" id="sup-yeast-size" value="100" step="any" min="0" placeholder="0"
+              style="width:70px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"> <span style="color:var(--muted);font-size:0.72rem;">g</span>
+          </td>
+          <td style="padding:6px 4px;white-space:nowrap;">£<input type="number" id="sup-yeast-price" value="0.0" step="0.01" min="0" placeholder="0.00"
+              style="width:65px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"></td>
+          <td style="text-align:right;padding:6px 8px;font-weight:600;color:var(--green);font-size:0.82rem;" id="sup-yeast-cpg">—</td>
+        </tr>
+        <tr>
+          <td style="font-weight:500;padding:6px 8px;">Fine Sea Salt</td>
+          <td style="padding:6px 4px;"><input type="text" id="sup-salt-supplier" value="" placeholder="Supplier"
+            style="width:100%;background:var(--dough);border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:4px;font-family:inherit;font-size:0.82rem;"
+            oninput="updateCosts()"></td>
+          <td style="padding:6px 4px;white-space:nowrap;">
+            <input type="number" id="sup-salt-size" value="750" step="any" min="0" placeholder="0"
+              style="width:70px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"> <span style="color:var(--muted);font-size:0.72rem;">g</span>
+          </td>
+          <td style="padding:6px 4px;white-space:nowrap;">£<input type="number" id="sup-salt-price" value="0.0" step="0.01" min="0" placeholder="0.00"
+              style="width:65px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"></td>
+          <td style="text-align:right;padding:6px 8px;font-weight:600;color:var(--green);font-size:0.82rem;" id="sup-salt-cpg">—</td>
+        </tr>
+        <tr>
+          <td style="font-weight:500;padding:6px 8px;">Semolina</td>
+          <td style="padding:6px 4px;"><input type="text" id="sup-semolina-supplier" value="Ratton" placeholder="Supplier"
+            style="width:100%;background:var(--dough);border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:4px;font-family:inherit;font-size:0.82rem;"
+            oninput="updateCosts()"></td>
+          <td style="padding:6px 4px;white-space:nowrap;">
+            <input type="number" id="sup-semolina-size" value="1000" step="any" min="0" placeholder="0"
+              style="width:70px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"> <span style="color:var(--muted);font-size:0.72rem;">g</span>
+          </td>
+          <td style="padding:6px 4px;white-space:nowrap;">£<input type="number" id="sup-semolina-price" value="2.99" step="0.01" min="0" placeholder="0.00"
+              style="width:65px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"></td>
+          <td style="text-align:right;padding:6px 8px;font-weight:600;color:var(--green);font-size:0.82rem;" id="sup-semolina-cpg">—</td>
+        </tr>
+        <tr>
+          <td style="font-weight:500;padding:6px 8px;">Olive Oil (dough)</td>
+          <td style="padding:6px 4px;"><input type="text" id="sup-dough-oil-supplier" value="" placeholder="Supplier"
+            style="width:100%;background:var(--dough);border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:4px;font-family:inherit;font-size:0.82rem;"
+            oninput="updateCosts()"></td>
+          <td style="padding:6px 4px;white-space:nowrap;">
+            <input type="number" id="sup-dough-oil-size" value="1000" step="any" min="0" placeholder="0"
+              style="width:70px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"> <span style="color:var(--muted);font-size:0.72rem;">ml</span>
+          </td>
+          <td style="padding:6px 4px;white-space:nowrap;">£<input type="number" id="sup-dough-oil-price" value="8.5" step="0.01" min="0" placeholder="0.00"
+              style="width:65px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"></td>
+          <td style="text-align:right;padding:6px 8px;font-weight:600;color:var(--green);font-size:0.82rem;" id="sup-dough-oil-cpg">—</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="panel" style="margin-bottom:24px;overflow-x:auto;">
+      <h3>🧀 Topping Ingredients</h3>
+      <table style="width:100%;border-collapse:collapse;font-size:0.85rem;">
+        <thead><tr><th style="text-align:left;padding:8px;border-bottom:2px solid var(--border);color:var(--muted);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;white-space:nowrap;">Ingredient</th><th style="text-align:left;padding:8px;border-bottom:2px solid var(--border);color:var(--muted);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;white-space:nowrap;">Supplier</th><th style="text-align:left;padding:8px;border-bottom:2px solid var(--border);color:var(--muted);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;white-space:nowrap;">Pack Size</th><th style="text-align:left;padding:8px;border-bottom:2px solid var(--border);color:var(--muted);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;white-space:nowrap;">Pack Price</th><th style="text-align:right;padding:8px;border-bottom:2px solid var(--border);color:var(--muted);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;">Cost/g</th></tr></thead>
+        <tbody>
+        <tr>
+          <td style="font-weight:500;padding:6px 8px;">San Marzano Tomato</td>
+          <td style="padding:6px 4px;"><input type="text" id="sup-tomato-supplier" value="Ratton" placeholder="Supplier"
+            style="width:100%;background:var(--dough);border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:4px;font-family:inherit;font-size:0.82rem;"
+            oninput="updateCosts()"></td>
+          <td style="padding:6px 4px;white-space:nowrap;">
+            <input type="number" id="sup-tomato-size" value="2500" step="any" min="0" placeholder="0"
+              style="width:70px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"> <span style="color:var(--muted);font-size:0.72rem;">g</span>
+          </td>
+          <td style="padding:6px 4px;white-space:nowrap;">£<input type="number" id="sup-tomato-price" value="5.55" step="0.01" min="0" placeholder="0.00"
+              style="width:65px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"></td>
+          <td style="text-align:right;padding:6px 8px;font-weight:600;color:var(--green);font-size:0.82rem;" id="sup-tomato-cpg">—</td>
+        </tr>
+        <tr>
+          <td style="font-weight:500;padding:6px 8px;">Mozzarella</td>
+          <td style="padding:6px 4px;"><input type="text" id="sup-mozz-supplier" value="Ratton" placeholder="Supplier"
+            style="width:100%;background:var(--dough);border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:4px;font-family:inherit;font-size:0.82rem;"
+            oninput="updateCosts()"></td>
+          <td style="padding:6px 4px;white-space:nowrap;">
+            <input type="number" id="sup-mozz-size" value="2000" step="any" min="0" placeholder="0"
+              style="width:70px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"> <span style="color:var(--muted);font-size:0.72rem;">g</span>
+          </td>
+          <td style="padding:6px 4px;white-space:nowrap;">£<input type="number" id="sup-mozz-price" value="17.99" step="0.01" min="0" placeholder="0.00"
+              style="width:65px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"></td>
+          <td style="text-align:right;padding:6px 8px;font-weight:600;color:var(--green);font-size:0.82rem;" id="sup-mozz-cpg">—</td>
+        </tr>
+        <tr>
+          <td style="font-weight:500;padding:6px 8px;">Pecorino</td>
+          <td style="padding:6px 4px;"><input type="text" id="sup-pec-supplier" value="Ratton" placeholder="Supplier"
+            style="width:100%;background:var(--dough);border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:4px;font-family:inherit;font-size:0.82rem;"
+            oninput="updateCosts()"></td>
+          <td style="padding:6px 4px;white-space:nowrap;">
+            <input type="number" id="sup-pec-size" value="1000" step="any" min="0" placeholder="0"
+              style="width:70px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"> <span style="color:var(--muted);font-size:0.72rem;">g</span>
+          </td>
+          <td style="padding:6px 4px;white-space:nowrap;">£<input type="number" id="sup-pec-price" value="16.99" step="0.01" min="0" placeholder="0.00"
+              style="width:65px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"></td>
+          <td style="text-align:right;padding:6px 8px;font-weight:600;color:var(--green);font-size:0.82rem;" id="sup-pec-cpg">—</td>
+        </tr>
+        <tr>
+          <td style="font-weight:500;padding:6px 8px;">Pepperoni</td>
+          <td style="padding:6px 4px;"><input type="text" id="sup-pepperoni-supplier" value="Ratton" placeholder="Supplier"
+            style="width:100%;background:var(--dough);border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:4px;font-family:inherit;font-size:0.82rem;"
+            oninput="updateCosts()"></td>
+          <td style="padding:6px 4px;white-space:nowrap;">
+            <input type="number" id="sup-pepperoni-size" value="1000" step="any" min="0" placeholder="0"
+              style="width:70px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"> <span style="color:var(--muted);font-size:0.72rem;">g</span>
+          </td>
+          <td style="padding:6px 4px;white-space:nowrap;">£<input type="number" id="sup-pepperoni-price" value="9.99" step="0.01" min="0" placeholder="0.00"
+              style="width:65px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"></td>
+          <td style="text-align:right;padding:6px 8px;font-weight:600;color:var(--green);font-size:0.82rem;" id="sup-pepperoni-cpg">—</td>
+        </tr>
+        <tr>
+          <td style="font-weight:500;padding:6px 8px;">Nduja</td>
+          <td style="padding:6px 4px;"><input type="text" id="sup-nduja-supplier" value="" placeholder="Supplier"
+            style="width:100%;background:var(--dough);border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:4px;font-family:inherit;font-size:0.82rem;"
+            oninput="updateCosts()"></td>
+          <td style="padding:6px 4px;white-space:nowrap;">
+            <input type="number" id="sup-nduja-size" value="200" step="any" min="0" placeholder="0"
+              style="width:70px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"> <span style="color:var(--muted);font-size:0.72rem;">g</span>
+          </td>
+          <td style="padding:6px 4px;white-space:nowrap;">£<input type="number" id="sup-nduja-price" value="8.75" step="0.01" min="0" placeholder="0.00"
+              style="width:65px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"></td>
+          <td style="text-align:right;padding:6px 8px;font-weight:600;color:var(--green);font-size:0.82rem;" id="sup-nduja-cpg">—</td>
+        </tr>
+        <tr>
+          <td style="font-weight:500;padding:6px 8px;">Tandoori Chicken</td>
+          <td style="padding:6px 4px;"><input type="text" id="sup-chicken-supplier" value="" placeholder="Supplier"
+            style="width:100%;background:var(--dough);border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:4px;font-family:inherit;font-size:0.82rem;"
+            oninput="updateCosts()"></td>
+          <td style="padding:6px 4px;white-space:nowrap;">
+            <input type="number" id="sup-chicken-size" value="600" step="any" min="0" placeholder="0"
+              style="width:70px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"> <span style="color:var(--muted);font-size:0.72rem;">g</span>
+          </td>
+          <td style="padding:6px 4px;white-space:nowrap;">£<input type="number" id="sup-chicken-price" value="4.3" step="0.01" min="0" placeholder="0.00"
+              style="width:65px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"></td>
+          <td style="text-align:right;padding:6px 8px;font-weight:600;color:var(--green);font-size:0.82rem;" id="sup-chicken-cpg">—</td>
+        </tr>
+        <tr>
+          <td style="font-weight:500;padding:6px 8px;">Fresh Basil</td>
+          <td style="padding:6px 4px;"><input type="text" id="sup-basil-supplier" value="" placeholder="Supplier"
+            style="width:100%;background:var(--dough);border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:4px;font-family:inherit;font-size:0.82rem;"
+            oninput="updateCosts()"></td>
+          <td style="padding:6px 4px;white-space:nowrap;">
+            <input type="number" id="sup-basil-size" value="15" step="any" min="0" placeholder="0"
+              style="width:70px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"> <span style="color:var(--muted);font-size:0.72rem;">g</span>
+          </td>
+          <td style="padding:6px 4px;white-space:nowrap;">£<input type="number" id="sup-basil-price" value="2.49" step="0.01" min="0" placeholder="0.00"
+              style="width:65px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"></td>
+          <td style="text-align:right;padding:6px 8px;font-weight:600;color:var(--green);font-size:0.82rem;" id="sup-basil-cpg">—</td>
+        </tr>
+        <tr>
+          <td style="font-weight:500;padding:6px 8px;">Dried Oregano</td>
+          <td style="padding:6px 4px;"><input type="text" id="sup-oregano-supplier" value="" placeholder="Supplier"
+            style="width:100%;background:var(--dough);border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:4px;font-family:inherit;font-size:0.82rem;"
+            oninput="updateCosts()"></td>
+          <td style="padding:6px 4px;white-space:nowrap;">
+            <input type="number" id="sup-oregano-size" value="50" step="any" min="0" placeholder="0"
+              style="width:70px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"> <span style="color:var(--muted);font-size:0.72rem;">g</span>
+          </td>
+          <td style="padding:6px 4px;white-space:nowrap;">£<input type="number" id="sup-oregano-price" value="2.0" step="0.01" min="0" placeholder="0.00"
+              style="width:65px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"></td>
+          <td style="text-align:right;padding:6px 8px;font-weight:600;color:var(--green);font-size:0.82rem;" id="sup-oregano-cpg">—</td>
+        </tr>
+        <tr>
+          <td style="font-weight:500;padding:6px 8px;">Garlic</td>
+          <td style="padding:6px 4px;"><input type="text" id="sup-garlic-supplier" value="" placeholder="Supplier"
+            style="width:100%;background:var(--dough);border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:4px;font-family:inherit;font-size:0.82rem;"
+            oninput="updateCosts()"></td>
+          <td style="padding:6px 4px;white-space:nowrap;">
+            <input type="number" id="sup-garlic-size" value="50" step="any" min="0" placeholder="0"
+              style="width:70px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"> <span style="color:var(--muted);font-size:0.72rem;">g</span>
+          </td>
+          <td style="padding:6px 4px;white-space:nowrap;">£<input type="number" id="sup-garlic-price" value="0.55" step="0.01" min="0" placeholder="0.00"
+              style="width:65px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"></td>
+          <td style="text-align:right;padding:6px 8px;font-weight:600;color:var(--green);font-size:0.82rem;" id="sup-garlic-cpg">—</td>
+        </tr>
+        <tr>
+          <td style="padding:4px 8px;font-size:0.78rem;color:var(--muted);">↳ g per clove</td>
+          <td colspan="2" style="padding:4px 8px;">
+            <input type="number" id="sup-garlic-gperclove" value="5" step="0.5" min="0.1"
+              style="width:60px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"> <span style="color:var(--muted);font-size:0.72rem;">g per clove (used in cost calc)</span>
+          </td>
+          <td></td><td></td>
+        </tr>
+        <tr>
+          <td style="font-weight:500;padding:6px 8px;">Olive Oil (topping)</td>
+          <td style="padding:6px 4px;"><input type="text" id="sup-oil-supplier" value="" placeholder="Supplier"
+            style="width:100%;background:var(--dough);border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:4px;font-family:inherit;font-size:0.82rem;"
+            oninput="updateCosts()"></td>
+          <td style="padding:6px 4px;white-space:nowrap;">
+            <input type="number" id="sup-oil-size" value="1000" step="any" min="0" placeholder="0"
+              style="width:70px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"> <span style="color:var(--muted);font-size:0.72rem;">ml</span>
+          </td>
+          <td style="padding:6px 4px;white-space:nowrap;">£<input type="number" id="sup-oil-price" value="8.5" step="0.01" min="0" placeholder="0.00"
+              style="width:65px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"></td>
+          <td style="text-align:right;padding:6px 8px;font-weight:600;color:var(--green);font-size:0.82rem;" id="sup-oil-cpg">—</td>
+        </tr>
+        <tr>
+          <td style="font-weight:500;padding:6px 8px;">Hot Honey</td>
+          <td style="padding:6px 4px;"><input type="text" id="sup-honey-supplier" value="" placeholder="Supplier"
+            style="width:100%;background:var(--dough);border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:4px;font-family:inherit;font-size:0.82rem;"
+            oninput="updateCosts()"></td>
+          <td style="padding:6px 4px;white-space:nowrap;">
+            <input type="number" id="sup-honey-size" value="260" step="any" min="0" placeholder="0"
+              style="width:70px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"> <span style="color:var(--muted);font-size:0.72rem;">ml</span>
+          </td>
+          <td style="padding:6px 4px;white-space:nowrap;">£<input type="number" id="sup-honey-price" value="4.99" step="0.01" min="0" placeholder="0.00"
+              style="width:65px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"></td>
+          <td style="text-align:right;padding:6px 8px;font-weight:600;color:var(--green);font-size:0.82rem;" id="sup-honey-cpg">—</td>
+        </tr>
+        <tr>
+          <td style="font-weight:500;padding:6px 8px;">Red Onion</td>
+          <td style="padding:6px 4px;"><input type="text" id="sup-onion-supplier" value="" placeholder="Supplier"
+            style="width:100%;background:var(--dough);border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:4px;font-family:inherit;font-size:0.82rem;"
+            oninput="updateCosts()"></td>
+          <td style="padding:6px 4px;white-space:nowrap;">
+            <input type="number" id="sup-onion-size" value="1000" step="any" min="0" placeholder="0"
+              style="width:70px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"> <span style="color:var(--muted);font-size:0.72rem;">g</span>
+          </td>
+          <td style="padding:6px 4px;white-space:nowrap;">£<input type="number" id="sup-onion-price" value="1.0" step="0.01" min="0" placeholder="0.00"
+              style="width:65px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"></td>
+          <td style="text-align:right;padding:6px 8px;font-weight:600;color:var(--green);font-size:0.82rem;" id="sup-onion-cpg">—</td>
+        </tr>
+        <tr>
+          <td style="font-weight:500;padding:6px 8px;">Fresh Coriander</td>
+          <td style="padding:6px 4px;"><input type="text" id="sup-coriander-supplier" value="" placeholder="Supplier"
+            style="width:100%;background:var(--dough);border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:4px;font-family:inherit;font-size:0.82rem;"
+            oninput="updateCosts()"></td>
+          <td style="padding:6px 4px;white-space:nowrap;">
+            <input type="number" id="sup-coriander-size" value="100" step="any" min="0" placeholder="0"
+              style="width:70px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"> <span style="color:var(--muted);font-size:0.72rem;">g</span>
+          </td>
+          <td style="padding:6px 4px;white-space:nowrap;">£<input type="number" id="sup-coriander-price" value="1.7" step="0.01" min="0" placeholder="0.00"
+              style="width:65px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"></td>
+          <td style="text-align:right;padding:6px 8px;font-weight:600;color:var(--green);font-size:0.82rem;" id="sup-coriander-cpg">—</td>
+        </tr>
+        <tr>
+          <td style="font-weight:500;padding:6px 8px;">Mango Chutney</td>
+          <td style="padding:6px 4px;"><input type="text" id="sup-mango-supplier" value="" placeholder="Supplier"
+            style="width:100%;background:var(--dough);border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:4px;font-family:inherit;font-size:0.82rem;"
+            oninput="updateCosts()"></td>
+          <td style="padding:6px 4px;white-space:nowrap;">
+            <input type="number" id="sup-mango-size" value="360" step="any" min="0" placeholder="0"
+              style="width:70px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"> <span style="color:var(--muted);font-size:0.72rem;">g</span>
+          </td>
+          <td style="padding:6px 4px;white-space:nowrap;">£<input type="number" id="sup-mango-price" value="2.5" step="0.01" min="0" placeholder="0.00"
+              style="width:65px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"></td>
+          <td style="text-align:right;padding:6px 8px;font-weight:600;color:var(--green);font-size:0.82rem;" id="sup-mango-cpg">—</td>
+        </tr>
+        <tr>
+          <td style="font-weight:500;padding:6px 8px;">Mixed Peppers</td>
+          <td style="padding:6px 4px;"><input type="text" id="sup-peppers-supplier" value="" placeholder="Supplier"
+            style="width:100%;background:var(--dough);border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:4px;font-family:inherit;font-size:0.82rem;"
+            oninput="updateCosts()"></td>
+          <td style="padding:6px 4px;white-space:nowrap;">
+            <input type="number" id="sup-peppers-size" value="1000" step="any" min="0" placeholder="0"
+              style="width:70px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"> <span style="color:var(--muted);font-size:0.72rem;">g</span>
+          </td>
+          <td style="padding:6px 4px;white-space:nowrap;">£<input type="number" id="sup-peppers-price" value="4.4" step="0.01" min="0" placeholder="0.00"
+              style="width:65px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"></td>
+          <td style="text-align:right;padding:6px 8px;font-weight:600;color:var(--green);font-size:0.82rem;" id="sup-peppers-cpg">—</td>
+        </tr>
+        <tr>
+          <td style="font-weight:500;padding:6px 8px;">Olives (green pitted)</td>
+          <td style="padding:6px 4px;"><input type="text" id="sup-olives-supplier" value="" placeholder="Supplier"
+            style="width:100%;background:var(--dough);border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:4px;font-family:inherit;font-size:0.82rem;"
+            oninput="updateCosts()"></td>
+          <td style="padding:6px 4px;white-space:nowrap;">
+            <input type="number" id="sup-olives-size" value="450" step="any" min="0" placeholder="0"
+              style="width:70px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"> <span style="color:var(--muted);font-size:0.72rem;">g</span>
+          </td>
+          <td style="padding:6px 4px;white-space:nowrap;">£<input type="number" id="sup-olives-price" value="3.5" step="0.01" min="0" placeholder="0.00"
+              style="width:65px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"></td>
+          <td style="text-align:right;padding:6px 8px;font-weight:600;color:var(--green);font-size:0.82rem;" id="sup-olives-cpg">—</td>
+        </tr>
+        <tr>
+          <td style="font-weight:500;padding:6px 8px;">Green Pesto</td>
+          <td style="padding:6px 4px;"><input type="text" id="sup-pesto-supplier" value="" placeholder="Supplier"
+            style="width:100%;background:var(--dough);border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:4px;font-family:inherit;font-size:0.82rem;"
+            oninput="updateCosts()"></td>
+          <td style="padding:6px 4px;white-space:nowrap;">
+            <input type="number" id="sup-pesto-size" value="100" step="any" min="0" placeholder="0"
+              style="width:70px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"> <span style="color:var(--muted);font-size:0.72rem;">ml</span>
+          </td>
+          <td style="padding:6px 4px;white-space:nowrap;">£<input type="number" id="sup-pesto-price" value="5.0" step="0.01" min="0" placeholder="0.00"
+              style="width:65px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"></td>
+          <td style="text-align:right;padding:6px 8px;font-weight:600;color:var(--green);font-size:0.82rem;" id="sup-pesto-cpg">—</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="panel" style="margin-bottom:24px;overflow-x:auto;">
+      <h3>⚙️ Overheads</h3>
+      <table style="width:100%;border-collapse:collapse;font-size:0.85rem;">
+        <thead><tr><th style="text-align:left;padding:8px;border-bottom:2px solid var(--border);color:var(--muted);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;white-space:nowrap;">Item</th><th style="text-align:left;padding:8px;border-bottom:2px solid var(--border);color:var(--muted);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;white-space:nowrap;">Supplier</th><th style="text-align:left;padding:8px;border-bottom:2px solid var(--border);color:var(--muted);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;white-space:nowrap;">Detail</th><th style="text-align:left;padding:8px;border-bottom:2px solid var(--border);color:var(--muted);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;white-space:nowrap;">—</th><th style="text-align:right;padding:8px;border-bottom:2px solid var(--border);color:var(--muted);font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;">Cost/pizza</th></tr></thead>
+        <tbody>
+          <tr>
+            <td style="padding:6px 8px;font-weight:500;">LPG</td>
+            <td style="padding:6px 4px;"><input type="text" id="sup-lpg-supplier" value="" placeholder="e.g. Calor"
+              style="width:100%;background:var(--dough);border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:4px;font-family:inherit;font-size:0.82rem;"
+              oninput="updateCosts()"></td>
+            <td style="padding:6px 4px;">
+              <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:0.8rem;">
+                <span style="color:var(--muted);">Cyl size (g):</span>
+                <input type="number" id="sup-lpg-cylsize" value="19000" step="100" min="0"
+                  style="width:70px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+                  oninput="updateCosts()">
+                <span style="color:var(--muted);">£:</span>
+                <input type="number" id="sup-lpg-cylprice" value="39.99" step="0.5" min="0"
+                  style="width:60px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+                  oninput="updateCosts()">
+                <span style="color:var(--muted);">g/pizza:</span>
+                <input type="number" id="sup-lpg-pergpizza" value="200" step="1" min="0"
+                  style="width:55px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+                  oninput="updateCosts()">
+              </div>
+            </td>
+            <td>—</td>
+            <td style="text-align:right;padding:6px 8px;font-weight:600;color:var(--green);font-size:0.82rem;" id="sup-lpg-cpp">—</td>
+          </tr>
+          <tr>
+            <td style="padding:6px 8px;font-weight:500;">Packaging</td>
+            <td style="padding:6px 4px;"><input type="text" id="sup-pack-supplier" value="" placeholder="e.g. Amazon"
+              style="width:100%;background:var(--dough);border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:4px;font-family:inherit;font-size:0.82rem;"
+              oninput="updateCosts()"></td>
+            <td style="padding:6px 4px;white-space:nowrap;font-size:0.8rem;">
+              £<input type="number" id="sup-pack-cpp" value="0.19" step="0.01" min="0"
+              style="width:65px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"> per pizza</td>
+            <td>—</td>
+            <td style="text-align:right;padding:6px 8px;font-weight:600;color:var(--green);font-size:0.82rem;" id="sup-pack-display">£0.30</td>
+          </tr>
+          <tr>
+            <td style="padding:6px 4px;"><input type="text" id="sup-other-label" value="Other" placeholder="Label"
+              style="width:100%;background:var(--dough);border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:500;"
+              oninput="updateCosts()"></td>
+            <td style="padding:6px 4px;"><input type="text" id="sup-other-supplier" value="Other" placeholder="Supplier"
+              style="width:100%;background:var(--dough);border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:4px;font-family:inherit;font-size:0.82rem;"
+              oninput="updateCosts()"></td>
+            <td style="padding:6px 4px;white-space:nowrap;font-size:0.8rem;">
+              £<input type="number" id="sup-other-cpp" value="0.50" step="0.01" min="0"
+              style="width:65px;background:var(--dough);border:1px solid var(--border);color:var(--green);padding:4px 6px;border-radius:4px;font-family:inherit;font-size:0.85rem;font-weight:600;text-align:right;"
+              oninput="updateCosts()"> per pizza</td>
+            <td>—</td>
+            <td style="text-align:right;padding:6px 8px;font-weight:600;color:var(--green);font-size:0.82rem;" id="sup-other-display">£0.00</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="insight-box">
+      💡 <strong>Tip:</strong> Pack sizes in grams for solids, ml for liquids. LPG default is 20g/pizza based on Gozney Dome specs (~600g/hr, ~30 pizzas/hr per oven).
+    </div>
+  </div>
+
   <!-- TAB: BATCH LOG -->
   <div id="tab-batches" class="tab-panel">
     <div class="panel" style="margin-bottom:24px">
       <h3>Recorded Batches</h3>
-      <p style="color:var(--muted); font-size:0.75rem; margin-bottom:20px;">7 batches from your data. Hydration consistency flagged where it deviates from your 61% target.</p>
+      <p style="color:var(--muted); font-size:0.75rem; margin-bottom:20px;">8 batches from your data. Hydration consistency flagged where it deviates from your 61% target.</p>
       <table>
         <thead>
           <tr>
@@ -943,6 +1439,7 @@ function downloadSelf() {
             <th>Type 00 (g)</th>
             <th>Hydration</th>
             <th>Status</th>
+            <th>Comment</th>
           </tr>
         </thead>
         <tbody id="batch-tbody"></tbody>
@@ -1030,13 +1527,14 @@ function downloadSelf() {
 <script>
   // === BATCH DATA from spreadsheet ===
   const batches = [
-    { date: '15 Jun 2025', balls: 9, temp: 20, water: 930, salt: 37.5, yeast: 0.75, t1: 0, t00: 1500 },
-    { date: '20 Jun 2025', balls: 6, temp: 24.4, water: 620, salt: 20, yeast: 0.4, t1: 300, t00: 700 },
-    { date: '?', balls: 6, temp: 25.9, water: 610, salt: 20, yeast: 0.38, t1: 300, t00: 700 },
-    { date: '22 Jun 2025', balls: 12, temp: 25, water: 1120, salt: 40, yeast: 0.8, t1: 300, t00: 1700 },
-    { date: '26 Jun 2025', balls: 24, temp: 25.5, water: 2440, salt: 80, yeast: 1.6, t1: 600, t00: 3400 },
-    { date: '02 Aug 2025', balls: 18, temp: 23, water: 1800, salt: 60, yeast: 1.2, t1: 450, t00: 2550 },
-    { date: '05 Sep 2025', balls: 18, temp: 21, water: 1833, salt: 60, yeast: 1.8, t1: 450, t00: 2555 },
+    { date: '15 Jun 2025', comment: 'Practice', balls: 9, temp: 20, water: 930, salt: 37.5, yeast: 0.75, t1: 0, t00: 1500 },
+    { date: '20 Jun 2025', comment: 'Practice', balls: 6, temp: 24.4, water: 620, salt: 20, yeast: 0.4, t1: 300, t00: 700 },
+    { date: '?', comment: '', balls: 6, temp: 25.9, water: 610, salt: 20, yeast: 0.38, t1: 300, t00: 700 },
+    { date: '22 Jun 2025', comment: 'McCartneys', balls: 12, temp: 25, water: 1120, salt: 40, yeast: 0.8, t1: 300, t00: 1700 },
+    { date: '26 Jun 2025', comment: 'School end of farming', balls: 24, temp: 25.5, water: 2440, salt: 80, yeast: 1.6, t1: 600, t00: 3400 },
+    { date: '02 Aug 2025', comment: 'MTB trip Dorchester', balls: 18, temp: 23, water: 1800, salt: 60, yeast: 1.2, t1: 450, t00: 2550 },
+    { date: '05 Sep 2025', comment: 'Jack MTB Party', balls: 18, temp: 21, water: 1833, salt: 60, yeast: 1.8, t1: 450, t00: 2555 },
+    { date: '21 Feb 2026', comment: 'Practice for Adam and wedding', balls: 24, temp: 19, water: 2445, salt: 80, yeast: 3.61, t1: 601, t00: 3407 },
   ];
 
   const yeastData = [
@@ -1076,6 +1574,7 @@ function downloadSelf() {
       <td>${b.t00}</td>
       <td>${badge}</td>
       <td>${b.date === '?' ? '<span class="badge badge-amber">Date missing</span>' : '<span class="badge badge-green">Logged</span>'}</td>
+      <td style="color:var(--muted);font-size:0.82rem;">${b.comment || ''}</td>
     </tr>`;
   });
 
@@ -1237,10 +1736,200 @@ function downloadSelf() {
     document.getElementById('pizzaCountNum').value = total;
     updateCalc();
     updateTotals();
+    updateCosts();
   }
 
+
+  // ================================================================
+  // COSTS
+  // ================================================================
+  function cpg(id) {
+    // cost per gram for a supplier ingredient
+    const size  = parseFloat(document.getElementById('sup-' + id + '-size').value)  || 0;
+    const price = parseFloat(document.getElementById('sup-' + id + '-price').value) || 0;
+    if (size <= 0) return 0;
+    const v = price / size;
+    const el = document.getElementById('sup-' + id + '-cpg');
+    if (el) el.textContent = v > 0 ? '£' + v.toFixed(4) : '—';
+    return v;
+  }
+
+  function fmt(n) { return n > 0 ? '£' + n.toFixed(2) : '—'; }
+
+  function marginColor(pct) {
+    if (pct >= 70) return '#6aab6a';
+    if (pct >= 50) return '#e6a817';
+    return '#c0392b';
+  }
+
+  function updateCosts() {
+    // --- Cost per gram for each ingredient ---
+    const c = {
+      t00:       cpg('t00'),
+      t1:        cpg('t1'),
+      yeast:     cpg('yeast'),
+      salt:      cpg('salt'),
+      semolina:  cpg('semolina'),
+      doughOil:  cpg('dough-oil'),
+      tomato:    cpg('tomato'),
+      mozz:      cpg('mozz'),
+      pec:       cpg('pec'),
+      pepperoni: cpg('pepperoni'),
+      nduja:     cpg('nduja'),
+      chicken:   cpg('chicken'),
+      basil:     cpg('basil'),
+      oregano:   cpg('oregano'),
+      garlic:    cpg('garlic'),
+      oil:       cpg('oil'),
+      honey:     cpg('honey'),
+      onion:     cpg('onion'),
+      coriander: cpg('coriander'),
+      mango:     cpg('mango'),
+      peppers:   cpg('peppers'),
+      olives:    cpg('olives'),
+      pesto:     cpg('pesto'),
+    };
+
+    // --- Overhead per pizza ---
+    const lpgCylSize  = parseFloat(document.getElementById('sup-lpg-cylsize').value)    || 0;
+    const lpgCylPrice = parseFloat(document.getElementById('sup-lpg-cylprice').value)   || 0;
+    const lpgPerPizza = parseFloat(document.getElementById('sup-lpg-pergpizza').value)  || 0;
+    const lpgCpp = lpgCylSize > 0 ? (lpgPerPizza / lpgCylSize) * lpgCylPrice : 0;
+    document.getElementById('sup-lpg-cpp').textContent = lpgCpp > 0 ? '£' + lpgCpp.toFixed(4) : '—';
+
+    const packCpp  = parseFloat(document.getElementById('sup-pack-cpp').value)  || 0;
+    const otherCpp = parseFloat(document.getElementById('sup-other-cpp').value) || 0;
+    document.getElementById('sup-pack-display').textContent  = fmt(packCpp);
+    document.getElementById('sup-other-display').textContent = fmt(otherCpp);
+
+    const overhead = lpgCpp + packCpp + otherCpp;
+
+    // --- Per-pizza recipe quantities (from Pizza Toppings tab) ---
+    const r = id => parseFloat(document.getElementById(id).value) || 0;
+
+    // Dough cost per pizza (flour per ball = 167g at 85/15 split, water/salt/yeast proportional)
+    const flourPerBall = 167;
+    const t1pct = parseInt(document.getElementById('t1ratio').value) / 100;
+    const t00g  = flourPerBall * (1 - t1pct);
+    const t1g   = flourPerBall * t1pct;
+    const hyd   = parseInt(document.getElementById('hydration').value) / 100;
+    const waterG = flourPerBall * hyd;
+    const saltG  = flourPerBall * 0.02;
+    const temp   = parseInt(document.getElementById('calcTemp').value);
+    const yeastEntry = yeastData.find(y => y.temp === temp);
+    const yeastGPerKg = yeastEntry ? yeastEntry.yeast : 0.6;
+    const yeastG = (yeastGPerKg * flourPerBall) / 1000;
+    const semolinaG = 5;
+
+    const doughCpp = t00g * c.t00 + t1g * c.t1 + saltG * c.salt + yeastG * c.yeast + semolinaG * c.semolina;
+
+    // --- Pizza-specific topping costs ---
+    function toppingCost(prefix, ingredients) {
+      return ingredients.reduce((sum, [id, ckey]) => sum + r(prefix + '-' + id) * c[ckey], 0);
+    }
+
+    const mCost  = doughCpp + overhead
+      + r('m-tom') * c.tomato
+      + r('m-garlic') * (parseFloat(document.getElementById('sup-garlic-gperclove').value)||5) * c.garlic
+      + r('m-oregano') * c.oregano
+      + r('m-oil') * c.oil
+      + r('m-basil') * c.basil;
+
+    const ppCost = doughCpp + overhead
+      + r('pp-tom') * c.tomato
+      + r('pp-mozz') * c.mozz
+      + r('pp-pep') * c.pepperoni
+      + r('pp-pec') * c.pec
+      + r('pp-honey') * c.honey
+      + r('pp-basil') * c.basil;
+
+    const ttCost = doughCpp + overhead
+      + r('tt-tom') * c.tomato
+      + r('tt-mozz') * c.mozz
+      + r('tt-chicken') * c.chicken
+      + r('tt-pec') * c.pec
+      + r('tt-onion') * c.onion
+      + r('tt-cor') * c.coriander
+      + r('tt-mango') * c.mango;
+
+    const nnCost = doughCpp + overhead
+      + r('nn-tom') * c.tomato
+      + r('nn-mozz') * c.mozz
+      + r('nn-nduja') * c.nduja
+      + r('nn-pec') * c.pec
+      + r('nn-honey') * c.honey
+      + r('nn-basil') * c.basil;
+
+    const vvCost = doughCpp + overhead
+      + r('vv-tom') * c.tomato
+      + r('vv-mozz') * c.mozz
+      + r('vv-pec') * c.pec
+      + r('vv-peppers') * c.peppers
+      + r('vv-onion') * c.onion
+      + r('vv-olives') * c.olives
+      + r('vv-pesto') * c.pesto
+      + r('vv-basil') * c.basil;
+
+    // --- Pizza counts ---
+    const counts = {
+      m:  parseInt(document.getElementById('p-marinara').value)  || 0,
+      pp: parseInt(document.getElementById('p-pepperoni').value) || 0,
+      tt: parseInt(document.getElementById('p-tikka').value)     || 0,
+      nn: parseInt(document.getElementById('p-nduja').value)     || 0,
+      vv: parseInt(document.getElementById('p-veggie').value)    || 0,
+    };
+
+    const pizzas = [
+      { key: 'm',  cost: mCost },
+      { key: 'pp', cost: ppCost },
+      { key: 'tt', cost: ttCost },
+      { key: 'nn', cost: nnCost },
+      { key: 'vv', cost: vvCost },
+    ];
+
+    let totalCost = 0, totalRev = 0, totalCount = 0;
+
+    pizzas.forEach(({ key, cost }) => {
+      const count = counts[key];
+      const sell  = parseFloat(document.getElementById('cm-' + key + '-sell').value) || 0;
+      const rev   = sell * count;
+      const batchCost = cost * count;
+      const margin = sell > 0 ? ((sell - cost) / sell) * 100 : null;
+
+      document.getElementById('cm-' + key + '-count').textContent  = count;
+      document.getElementById('cm-' + key + '-cpp').textContent    = cost > 0 ? '£' + cost.toFixed(2) : '—';
+      document.getElementById('cm-' + key + '-rev').textContent    = fmt(rev);
+
+      const mEl = document.getElementById('cm-' + key + '-margin');
+      if (margin !== null && cost > 0) {
+        mEl.textContent = margin.toFixed(0) + '%';
+        mEl.style.color = marginColor(margin);
+      } else {
+        mEl.textContent = '—';
+        mEl.style.color = '';
+      }
+
+      totalCost  += batchCost;
+      totalRev   += rev;
+      totalCount += count;
+    });
+
+    document.getElementById('cm-total-count').textContent = totalCount;
+    document.getElementById('cm-total-cost').textContent  = totalCost > 0 ? '£' + totalCost.toFixed(2) : '—';
+    document.getElementById('cm-total-rev').textContent   = totalRev  > 0 ? '£' + totalRev.toFixed(2)  : '—';
+
+    const totalMargin = totalRev > 0 ? ((totalRev - totalCost) / totalRev) * 100 : null;
+    const tmEl = document.getElementById('cm-total-margin');
+    if (totalMargin !== null && totalCost > 0) {
+      tmEl.textContent = totalMargin.toFixed(0) + '%';
+      tmEl.style.color = marginColor(totalMargin);
+      tmEl.style.fontWeight = '700';
+    } else {
+      tmEl.textContent = '—';
+    }
+  }
   // Init pizza totals on load
-  window.addEventListener('load', function() { setTimeout(updatePizzas, 300); });
+  window.addEventListener('load', function() { setTimeout(updatePizzas, 300); setTimeout(updateCosts, 400); });
 
   // === TABS ===
   function showTab(id) {
